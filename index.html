@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>⚡ DBZ LIFE RPG V3</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="stars-canvas"></canvas>
+
+<!-- CREATION SCREEN -->
+<div id="creation-screen">
+  <div class="creation-box">
+    <div class="creation-logo">
+      <div class="creation-title">⚡ DBZ LIFE RPG</div>
+      <div class="creation-version">V3 — REMASTERED</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nome do Guerreiro</label>
+      <input class="form-input" id="char-name-input" placeholder="Digite seu nome..." maxlength="16" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Escolha sua Raça</label>
+      <div class="race-grid">
+        <div class="race-card selected" data-race="saiyajin" onclick="selectRace(this)">
+          <div class="race-emoji">🐒</div>
+          <div class="race-name">Saiyajin</div>
+          <div class="race-bonus">Zenkai · SSJ3<br>+50% XP batalha</div>
+        </div>
+        <div class="race-card" data-race="meio-saiyajin" onclick="selectRace(this)">
+          <div class="race-emoji">⚡</div>
+          <div class="race-name">Meio-Saiyajin</div>
+          <div class="race-bonus">SSJ2 fácil<br>Ki natural alto</div>
+        </div>
+        <div class="race-card" data-race="namekusei" onclick="selectRace(this)">
+          <div class="race-emoji">🟢</div>
+          <div class="race-name">Namekusei</div>
+          <div class="race-bonus">Regen HP alta<br>Fusão especial</div>
+        </div>
+        <div class="race-card" data-race="humano" onclick="selectRace(this)">
+          <div class="race-emoji">👊</div>
+          <div class="race-name">Humano</div>
+          <div class="race-bonus">+30% Ki natural<br>Adapt. rápida</div>
+        </div>
+        <div class="race-card" data-race="androide" onclick="selectRace(this)">
+          <div class="race-emoji">🤖</div>
+          <div class="race-name">Androide</div>
+          <div class="race-bonus">Sem custo Ki<br>Alta velocidade</div>
+        </div>
+        <div class="race-card" data-race="majin" onclick="selectRace(this)">
+          <div class="race-emoji">👾</div>
+          <div class="race-name">Majin</div>
+          <div class="race-bonus">Absorção HP<br>Boost fúria</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Escolha sua Classe</label>
+      <div class="class-grid">
+        <div class="class-card selected" data-class="guerreiro" onclick="selectClass(this)">
+          <div class="class-icon">⚔️</div>
+          <div class="class-name">Guerreiro</div>
+          <div class="class-desc">Alta força e defesa física</div>
+        </div>
+        <div class="class-card" data-class="ki-mestre" onclick="selectClass(this)">
+          <div class="class-icon">✨</div>
+          <div class="class-name">Ki Mestre</div>
+          <div class="class-desc">Ataques de Ki devastadores</div>
+        </div>
+        <div class="class-card" data-class="veloz" onclick="selectClass(this)">
+          <div class="class-icon">💨</div>
+          <div class="class-name">Veloz</div>
+          <div class="class-desc">Esquiva e contra-ataques</div>
+        </div>
+      </div>
+    </div>
+    <!-- MINI PERSONALIZAÇÃO INICIAL -->
+    <div class="form-group">
+      <label class="form-label">🎨 Personalização Inicial <span style="font-size:11px;opacity:.6;font-weight:400">(opcional — pode mudar depois na Loja)</span></label>
+      <div class="creation-cust-grid">
+        <div class="creation-cust-col">
+          <div class="creation-cust-label">🥋 Cor do Traje</div>
+          <div class="creation-swatch-row" id="creation-suit-swatches">
+            <div class="cr-swatch selected" data-val="" style="background:linear-gradient(135deg,#888 50%,#ccc 50%)" title="Padrão da raça"></div>
+            <div class="cr-swatch" data-val="#ff6600" style="background:#ff6600" title="Laranja"></div>
+            <div class="cr-swatch" data-val="#2244cc" style="background:#2244cc" title="Azul"></div>
+            <div class="cr-swatch" data-val="#cc2222" style="background:#cc2222" title="Vermelho"></div>
+            <div class="cr-swatch" data-val="#228844" style="background:#228844" title="Verde"></div>
+            <div class="cr-swatch" data-val="#772299" style="background:#772299" title="Roxo"></div>
+            <div class="cr-swatch" data-val="#1a1a2e" style="background:#1a1a2e;border-color:#555" title="Preto"></div>
+            <div class="cr-swatch" data-val="#ccaa00" style="background:#ccaa00" title="Dourado"></div>
+          </div>
+        </div>
+        <div class="creation-cust-col">
+          <div class="creation-cust-label">💇 Cor do Cabelo</div>
+          <div class="creation-swatch-row" id="creation-hair-swatches">
+            <div class="cr-swatch selected" data-val="" style="background:linear-gradient(135deg,#888 50%,#ccc 50%)" title="Padrão da raça"></div>
+            <div class="cr-swatch" data-val="#1a1a1a" style="background:#1a1a1a" title="Preto"></div>
+            <div class="cr-swatch" data-val="#3a2010" style="background:#3a2010" title="Castanho"></div>
+            <div class="cr-swatch" data-val="#ccaa00" style="background:#ccaa00" title="Loiro"></div>
+            <div class="cr-swatch" data-val="#ddeeff" style="background:#ddeeff;border-color:#aaa" title="Branco"></div>
+            <div class="cr-swatch" data-val="#1144aa" style="background:#1144aa" title="Azul"></div>
+            <div class="cr-swatch" data-val="#aa1111" style="background:#aa1111" title="Vermelho"></div>
+            <div class="cr-swatch" data-val="#dd6699" style="background:#dd6699" title="Rosa"></div>
+          </div>
+        </div>
+      </div>
+      <div class="creation-cust-grid" style="margin-top:10px;">
+        <div class="creation-cust-col">
+          <div class="creation-cust-label">✨ Emblema</div>
+          <div class="creation-emblem-row" id="creation-emblems">
+            <div class="cr-emblem selected" data-val="⚡">⚡</div>
+            <div class="cr-emblem" data-val="🔥">🔥</div>
+            <div class="cr-emblem" data-val="💫">💫</div>
+            <div class="cr-emblem" data-val="🌊">🌊</div>
+            <div class="cr-emblem" data-val="🐉">🐉</div>
+            <div class="cr-emblem" data-val="👑">👑</div>
+            <div class="cr-emblem" data-val="⚔️">⚔️</div>
+            <div class="cr-emblem" data-val="💀">💀</div>
+          </div>
+        </div>
+        <div class="creation-cust-col">
+          <div class="creation-cust-label">💬 Lema <span style="font-size:10px;opacity:.5">(max 40 chars)</span></div>
+          <input id="creation-motto-input" type="text" maxlength="40" placeholder='ex: "Meu poder não tem limites!"'
+            style="width:100%;padding:6px 10px;background:#0a0a1a;color:#dde0ff;border:1px solid #334;border-radius:6px;font-family:inherit;font-size:12px;box-sizing:border-box;margin-top:4px;">
+        </div>
+      </div>
+      <div style="margin-top:10px;">
+        <div class="creation-cust-label">👑 Título inicial</div>
+        <select id="creation-title-select" style="width:100%;padding:6px 10px;background:#0a0a1a;color:#dde0ff;border:1px solid #334;border-radius:6px;font-family:inherit;font-size:12px;margin-top:4px;">
+          <option value="">(sem título)</option>
+          <option value="O Lendário">O Lendário</option>
+          <option value="A Lenda Viva">A Lenda Viva</option>
+          <option value="Espírito de Combate">Espírito de Combate</option>
+          <option value="Guerreiro Eterno">Guerreiro Eterno</option>
+          <option value="O Indomável">O Indomável</option>
+          <option value="Além dos Deuses">Além dos Deuses</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn btn-gold btn-full btn-lg" onclick="createCharacter()">▶ INICIAR JORNADA</button>
+    <button class="btn btn-ghost btn-full" onclick="openSaveModal('load')" style="margin-top:8px;">📂 Carregar Jogo Salvo</button>
+  </div>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="game-screen" style="display:none;">
+  <div id="game-root">
+
+    <!-- HEADER -->
+    <header class="game-header">
+      <div class="header-left">
+        <div class="game-title">⚡ DBZ LIFE RPG <span class="v-badge">V3</span></div>
+        <div class="header-meta">
+          <span class="meta-tag">DIA <span id="day-display" class="meta-val">1</span></span>
+          <span class="meta-sep">·</span>
+          <span class="meta-tag">ARC: <span id="arc-display" class="meta-val">Início</span></span>
+          <span class="meta-sep">·</span>
+          <span class="meta-tag location-tag">📍 <span id="location-display">Terra</span></span>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="zeni-box">💰 <span id="zeni-display">0</span></div>
+        <button class="hdr-btn" onclick="openMap()" title="Mapa">🗺️</button>
+        <button class="hdr-btn" onclick="openSaveModal('save')" title="Salvar">💾</button>
+        <button class="hdr-btn" onclick="openSaveModal('load')" title="Carregar">📂</button>
+      </div>
+    </header>
+
+    <div class="game-layout">
+      <!-- LEFT PANEL -->
+      <aside class="left-panel">
+
+        <!-- CHARACTER CARD -->
+        <div class="panel char-panel">
+          <div class="avatar-wrap">
+            <div class="avatar-aura" id="avatar-aura"></div>
+            <canvas id="pixel-canvas" width="96" height="128"></canvas>
+          </div>
+          <div class="char-info">
+            <div class="char-name-row">
+              <span id="char-emblem" class="char-emblem">⚡</span>
+              <div>
+                <div id="char-name-display" class="char-name">?</div>
+                <div id="char-title-display" class="char-title-display"></div>
+              </div>
+            </div>
+            <div id="char-sub" class="char-sub-info">? · ?</div>
+            <div id="char-motto-display" class="char-motto-display" style="display:none"></div>
+            <div id="transform-badge" class="transform-badge t-normal">NORMAL</div>
+            <div id="power-level" class="power-level-display">PODER: 1</div>
+          </div>
+
+          <div class="bars-section">
+            <div class="bar-row">
+              <div class="bar-labels">
+                <span class="bar-name hp-color">HP</span>
+                <span class="bar-val" id="hp-text">100/100</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill bar-hp" id="hp-bar" style="width:100%"></div>
+              </div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-labels">
+                <span class="bar-name ki-color">KI</span>
+                <span class="bar-val" id="ki-text">50/50</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill bar-ki" id="ki-bar" style="width:100%"></div>
+              </div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-labels">
+                <span class="bar-name xp-color">XP</span>
+                <span class="bar-val" id="xp-text">0/100</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill bar-xp" id="xp-bar" style="width:0%"></div>
+              </div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-labels">
+                <span class="bar-name st-color">STM</span>
+                <span class="bar-val" id="stam-text">80/80</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill bar-stam" id="stam-bar" style="width:100%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="panel stats-panel">
+          <div class="panel-title">📊 Atributos</div>
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-lbl">FORÇA</div>
+              <div class="stat-val" id="stat-forca">10</div>
+              <button class="stat-btn" onclick="upgradeAttr('forca')" title="Aumentar Força">+</button>
+            </div>
+            <div class="stat-box">
+              <div class="stat-lbl">DEFESA</div>
+              <div class="stat-val" id="stat-defesa">8</div>
+              <button class="stat-btn" onclick="upgradeAttr('defesa')" title="Aumentar Defesa">+</button>
+            </div>
+            <div class="stat-box">
+              <div class="stat-lbl">VEL</div>
+              <div class="stat-val" id="stat-vel">10</div>
+              <button class="stat-btn" onclick="upgradeAttr('velocidade')" title="Aumentar Velocidade">+</button>
+            </div>
+            <div class="stat-box">
+              <div class="stat-lbl">KI ATK</div>
+              <div class="stat-val" id="stat-ki">8</div>
+              <button class="stat-btn" onclick="upgradeAttr('ki')" title="Aumentar Ki Atk">+</button>
+            </div>
+          </div>
+          <div class="stat-footer">
+            <span>Nível <strong id="stat-nivel">1</strong></span>
+            <span class="pts-badge"><span id="stat-pts">0</span> pontos</span>
+          </div>
+        </div>
+
+        <!-- INVENTORY -->
+        <div class="panel inv-panel">
+          <div class="panel-title">🎒 Inventário</div>
+          <div class="inv-grid">
+            <div class="inv-item"><span class="inv-icon">🫘</span><span class="inv-label">Senzu</span><span class="inv-count" id="inv-senzu">1</span></div>
+            <div class="inv-item"><span class="inv-icon">🔮</span><span class="inv-label">Esferas</span><span class="inv-count" id="inv-esferas">0</span><span class="inv-max">/7</span></div>
+            <div class="inv-item"><span class="inv-icon">🏆</span><span class="inv-label">Torneios</span><span class="inv-count" id="inv-torneios">0</span></div>
+            <div class="inv-item"><span class="inv-icon">⚔️</span><span class="inv-label">Batalhas</span><span class="inv-count" id="inv-batalhas">0</span></div>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- MAIN AREA -->
+      <main class="main-area">
+
+        <!-- TABS -->
+        <div class="panel tabs-panel">
+          <div class="tab-bar primary-tabs">
+            <button class="tab-btn active" onclick="switchTab('acao')" data-tab="acao" title="Atalho: 1">⚡ Ação</button>
+            <button class="tab-btn" onclick="switchTab('combate')" data-tab="combate" title="Atalho: 2">⚔️ Combate</button>
+            <button class="tab-btn" onclick="switchTab('dungeon')" data-tab="dungeon" title="Atalho: 3">🏰 Dungeon</button>
+            <button class="tab-btn" onclick="switchTab('historia')" data-tab="historia" title="Atalho: 5">📖 História</button>
+            <button class="btn btn-orange prestige-btn" onclick="openPrestigeModal()" style="margin-left:auto; padding:4px 10px; font-size:11px;">🔥 Prestígio</button>
+          </div>
+          <div class="tab-bar secondary-tabs">
+            <button class="tab-btn" onclick="switchTab('missoes')" data-tab="missoes" title="Atalho: 4">📜 Missões</button>
+            <button class="tab-btn" onclick="switchTab('habilidades')" data-tab="habilidades" title="Atalho: 6">✨ Hab.</button>
+            <button class="tab-btn" onclick="switchTab('loja')" data-tab="loja" title="Atalho: 7">🏪 Loja</button>
+            <button class="tab-btn" onclick="switchTab('conquistas')" data-tab="conquistas" title="Atalho: 8">🏆 Feitos</button>
+            <button class="tab-btn" data-tab="loja-maldita" onclick="switchTab('loja-maldita')">😈 Loja Maldita</button>
+          </div>
+
+
+
+          <!-- AÇÃO TAB -->
+          <div class="tab-content active" id="tab-acao">
+            <div class="action-section">
+              <div class="action-group-label">⚡ Desenvolvimento</div>
+              <div class="action-grid-3">
+                <button class="action-card" onclick="doAction('treinar')" id="btn-treinar">
+                  <div class="ac-icon">💪</div>
+                  <div class="ac-name">TREINAR</div>
+                  <div class="ac-cost">-20 STM · -10 HP</div>
+                </button>
+                <button class="action-card" onclick="requestTreinoIntenso()" id="btn-treinar-intenso">
+                  <div class="ac-icon">🔥</div>
+                  <div class="ac-name">TREINO INTENSO</div>
+                  <div class="ac-cost">-40 STM · -25 HP · risco</div>
+                </button>
+                <button class="action-card" onclick="doAction('meditar')" id="btn-meditar">
+                  <div class="ac-icon">🧘</div>
+                  <div class="ac-name">MEDITAR</div>
+                  <div class="ac-cost">-5 STM · +Ki</div>
+                </button>
+              </div>
+            </div>
+            <div class="action-section">
+              <div class="action-group-label">🌍 Mundo</div>
+              <div class="action-grid-3">
+                <button class="action-card" onclick="doAction('explorar')" id="btn-explorar">
+                  <div class="ac-icon">🗺️</div>
+                  <div class="ac-name">EXPLORAR</div>
+                  <div class="ac-cost">-10 STM · eventos</div>
+                </button>
+                <button class="action-card" onclick="doAction('trabalhar')" id="btn-trabalhar">
+                  <div class="ac-icon">💼</div>
+                  <div class="ac-name">TRABALHAR</div>
+                  <div class="ac-cost">-10 STM · +Zeni</div>
+                </button>
+                <button class="action-card action-card-rest" onclick="doAction('descansar')" id="btn-descansar">
+                  <div class="ac-icon">💤</div>
+                  <div class="ac-name">DESCANSAR</div>
+                  <div class="ac-cost">Cura HP/Ki/STM</div>
+                </button>
+              </div>
+            </div>
+            <div class="action-section">
+              <div class="action-group-label">🏆 Especial</div>
+              <div class="action-grid-2">
+                <button class="action-card action-card-special" onclick="requestTorneio()">
+                  <div class="ac-icon">🏆</div>
+                  <div class="ac-name">TORNEIO</div>
+                  <div class="ac-cost">-30 STM -20 Ki · grande prêmio</div>
+                </button>
+                <button class="action-card action-card-special" onclick="doAction('senzu')">
+                  <div class="ac-icon">🫘</div>
+                  <div class="ac-name">SENZU BEAN</div>
+                  <div class="ac-cost">Restauração total</div>
+                </button>
+              </div>
+              <button class="btn btn-transform btn-full" onclick="doAction('transformar')" id="btn-transform" title="Requer nível, atributos e Ki (estilo DB Rage / Block C)">
+                ⚡ TRANSFORMAR / REVERTER — <span id="next-transform-label">SSJ</span>
+              </button>
+              <div id="transform-reqs" class="transform-reqs" aria-live="polite"></div>
+              <button class="btn btn-boss btn-full" id="btn-boss" onclick="openBossFight()">
+                💀 BOSS FIGHT — VEGETA
+              </button>
+              <button class="btn btn-purple" onclick="openMastersModal()">🥋 Treino com Mestre</button>
+            </div>
+          </div>
+
+          <!-- COMBATE TAB (turn-based) -->
+          <div class="tab-content" id="tab-combate">
+            <div id="combat-idle">
+              <div class="combat-intro">
+                <div class="combat-intro-icon">⚔️</div>
+                <div class="combat-intro-title">Sistema de Combate</div>
+                <div class="combat-intro-desc">Batalhas por turnos com escolhas táticas. Cada decisão importa!</div>
+                <div class="enemy-select-label">Escolha o inimigo:</div>
+                <div class="enemy-list" id="enemy-select-list"></div>
+              </div>
+            </div>
+            <div id="combat-arena" style="display:none;">
+              <div id="phaser-combat-container" class="phaser-combat-container" aria-hidden="true"></div>
+              <div class="arena-header">
+                <div class="arena-side player-side">
+                  <canvas id="combat-player-canvas" width="72" height="96"></canvas>
+                  <div class="arena-name" id="combat-player-name">VOCÊ</div>
+                  <div class="arena-hp-wrap">
+                    <div class="arena-hp-bar"><div class="arena-hp-fill player-hp-fill" id="combat-player-hp-fill"></div></div>
+                    <div class="arena-hp-text" id="combat-player-hp-text">100/100</div>
+                  </div>
+                  <div class="arena-ki-wrap">
+                    <div class="arena-ki-bar"><div class="arena-ki-fill" id="combat-player-ki-fill"></div></div>
+                    <div class="arena-ki-text" id="combat-player-ki-text">Ki: 50</div>
+                  </div>
+                </div>
+                <div class="arena-vs">VS</div>
+                <div class="arena-side enemy-side">
+                  <div class="enemy-sprite" id="combat-enemy-sprite">👹</div>
+                  <div class="arena-name enemy-color" id="combat-enemy-name">?</div>
+                  <div class="arena-hp-wrap">
+                    <div class="arena-hp-bar"><div class="arena-hp-fill enemy-hp-fill" id="combat-enemy-hp-fill"></div></div>
+                    <div class="arena-hp-text" id="combat-enemy-hp-text">?/?</div>
+                  </div>
+                  <div class="enemy-status" id="combat-enemy-status"></div>
+                </div>
+              </div>
+              <div class="combat-log-box" id="combat-log"></div>
+              <div class="turn-indicator" id="turn-indicator">Seu Turno</div>
+              <div class="combat-actions" id="combat-action-buttons"></div>
+            </div>
+          </div>
+
+          <!-- DUNGEON TAB -->
+          <div class="tab-content" id="tab-dungeon">
+            <div class="dungeon-intro">Escolha uma dungeon. Sua raça libera bônus especiais!</div>
+            <div id="dungeon-list"></div>
+          </div>
+
+          <!-- MISSÕES TAB -->
+          <div class="tab-content" id="tab-missoes">
+            <div class="mission-list" id="mission-list"></div>
+          </div>
+
+          <!-- MODO HISTÓRIA -->
+          <div class="tab-content" id="tab-historia">
+            <div class="story-intro">📖 <strong>Modo História</strong> — da invasão Saiyajin até <strong>Cell Perfeito</strong>. Cada vitória abre uma escolha: <span class="story-good">Bem</span> (descontos na loja) ou <span class="story-evil">Mal</span> (arsenal sombrio). Dificuldade alta: treine e use transformações.</div>
+            <div class="story-key-hint">Teclas <strong>1–8</strong> trocam de aba rapidamente.</div>
+            <div id="story-list" class="story-list"></div>
+          </div>
+
+          <!-- HABILIDADES TAB -->
+          <div class="tab-content" id="tab-habilidades">
+            <div class="skill-list" id="skill-list"></div>
+          </div>
+
+          <!-- LOJA TAB -->
+          <div class="tab-content" id="tab-loja">
+            <div class="shop-grid" id="shop-grid"></div>
+          </div>
+
+          <!-- CONQUISTAS TAB -->
+          <div class="tab-content" id="tab-conquistas">
+            <div class="achievement-list" id="achievement-list"></div>
+          </div>
+        </div>
+          <!--LOJA MALDITA-->  
+        <div id="tab-loja-maldita" class="tab-content">
+        <div class="villain-shop-tab-wrapper">
+          <div id="villain-shop-content"></div>
+            </div>
+</div>
+        <!-- GAME LOG -->
+        <div class="panel log-panel">
+          <div class="panel-title">📋 Diário do Guerreiro <button class="log-clear-btn" onclick="clearLog()">limpar</button></div>
+          <div id="game-log"></div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MAP MODAL ═══ -->
+<div id="map-modal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-box map-modal-box">
+    <div class="modal-title">🌍 Mapa do Universo DBZ</div>
+    <canvas id="world-map-canvas" width="620" height="360"></canvas>
+    <div class="location-info-box" id="location-info-box">
+      <div class="loc-name" id="map-loc-name">Selecione um local</div>
+      <div class="loc-desc" id="map-loc-desc">Clique em um planeta ou local para ver detalhes e viajar.</div>
+      <div class="loc-actions">
+        <button class="btn btn-gold btn-sm" id="map-travel-btn" onclick="travelToLocation()" style="display:none;">✈️ Viajar</button>
+        <button class="btn btn-orange btn-sm" id="map-dungeon-btn" onclick="enterLocationDungeon()" style="display:none;">⚔️ Dungeon Local</button>
+      </div>
+    </div>
+    <button class="btn btn-ghost btn-full" onclick="closeMap()" style="margin-top:10px;">✖ Fechar</button>
+  </div>
+</div>
+
+<!-- ═══ DUNGEON MODAL ═══ -->
+<div id="dungeon-modal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-box dungeon-modal-box">
+    <div class="dungeon-modal-title" id="dungeon-title">⚔️ DUNGEON</div>
+    <div class="dungeon-floor-indicator" id="dungeon-floor">ANDAR 1/5</div>
+    <div class="dungeon-scene" id="dungeon-scene"></div>
+    <div id="dungeon-enemy-area"></div>
+    <div class="dungeon-actions" id="dungeon-actions"></div>
+  </div>
+</div>
+
+<!-- ═══ BOSS MODAL ═══ -->
+<div id="boss-modal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-box boss-modal-box">
+    <div class="boss-header-title">⚡ VEGETA ⚡</div>
+    <div class="boss-sub-title">PRÍNCIPE DOS SAIYAJINS — FASE <span id="boss-phase-label">1</span></div>
+    <div class="boss-arena-wrap">
+      <div class="boss-side player-boss-side">
+        <canvas id="player-canvas-boss" width="80" height="106"></canvas>
+        <div class="boss-fighter-name" id="boss-player-name">VOCÊ</div>
+      </div>
+      <div class="boss-vs">VS</div>
+      <div class="boss-side enemy-boss-side">
+        <canvas id="boss-canvas" width="80" height="106"></canvas>
+        <div class="boss-fighter-name vegeta-name">VEGETA</div>
+      </div>
+    </div>
+    <div class="boss-hp-section">
+      <div class="boss-hp-row">
+        <span class="boss-hp-label">VEGETA HP</span>
+        <span class="boss-hp-val" id="boss-hp-text">5000</span>
+      </div>
+      <div class="boss-hp-track"><div class="boss-hp-fill" id="boss-hp-fill" style="width:100%"></div></div>
+      <div class="boss-hp-row">
+        <span class="boss-hp-label">SEU HP</span>
+        <span class="boss-hp-val" id="boss-player-hp-text">100</span>
+      </div>
+      <div class="boss-player-hp-track"><div class="boss-player-hp-fill" id="boss-player-hp-fill" style="width:100%"></div></div>
+      <div class="boss-ki-row">
+        <span class="boss-hp-label">SEU KI</span>
+        <span class="boss-hp-val" id="boss-player-ki-text">50</span>
+      </div>
+    </div>
+    <div class="boss-phase-badge" id="boss-phase-badge">FASE 1 — VEGETA NORMAL</div>
+    <div class="boss-log-box" id="boss-log"></div>
+    <div class="boss-actions-grid" id="boss-actions"></div>
+  </div>
+</div>
+
+<!-- ═══ EVENT MODAL ═══ -->
+<div id="event-modal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-box event-modal-box">
+    <div class="event-icon-big" id="ev-icon">⚡</div>
+    <div class="event-modal-title" id="ev-title">EVENTO!</div>
+    <div class="event-modal-text" id="ev-text"></div>
+    <div class="event-choices" id="ev-choices"></div>
+  </div>
+</div>
+
+<!-- ═══ CUTSCENE (HISTÓRIA) ═══ -->
+<div id="cutscene-overlay" class="cutscene-overlay" role="dialog" aria-modal="true" aria-label="Cutscene">
+  <div class="cutscene-inner">
+    <div class="cutscene-saga" id="cutscene-saga"></div>
+    <div class="cutscene-icon" id="cutscene-icon">⚡</div>
+    <p class="cutscene-line" id="cutscene-line"></p>
+    <div class="cutscene-sub" id="cutscene-sub"></div>
+    <div class="cutscene-footer">
+      <button type="button" class="btn btn-ghost btn-sm" id="cutscene-skip">Pular tudo</button>
+      <span class="cutscene-hint">Clique / Enter — avançar · Espaço — pular</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ STORY CHOICE (BEM / MAL) ═══ -->
+<div id="story-choice-modal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-box story-choice-box">
+    <div class="story-choice-icon" id="story-choice-icon">📖</div>
+    <div class="story-choice-heading" id="story-choice-heading">Capítulo</div>
+    <div class="story-choice-title" id="story-choice-title"></div>
+    <p class="story-choice-prompt" id="story-choice-prompt"></p>
+    <div class="story-choice-split">
+      <div class="story-choice-card story-choice-good-side">
+        <div class="story-choice-card-title">☀️ Caminho do Bem</div>
+        <p class="story-blurb" id="story-choice-good-blurb"></p>
+        <button type="button" class="btn btn-green btn-full" id="story-choice-good-btn"></button>
+      </div>
+      <div class="story-choice-card story-choice-evil-side">
+        <div class="story-choice-card-title">🌑 Caminho do Mal</div>
+        <p class="story-blurb" id="story-choice-evil-blurb"></p>
+        <button type="button" class="btn btn-red btn-full" id="story-choice-evil-btn"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LEVEL UP MODAL ═══ -->
+<div id="levelup-modal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-box levelup-modal-box">
+    <div class="levelup-stars">★ ★ ★</div>
+    <div class="levelup-title">LEVEL UP!</div>
+    <div class="levelup-level" id="levelup-number">2</div>
+    <div class="levelup-subtitle">Você ficou mais forte!</div>
+    <div class="levelup-rewards" id="levelup-rewards"></div>
+    <button class="btn btn-gold btn-full btn-lg" onclick="closeLevelUp()">💥 CONTINUAR</button>
+  </div>
+</div>
+
+<script>
+// ── CREATION SCREEN SWATCH INTERACTION ──
+document.addEventListener('DOMContentLoaded', () => {
+  function initSwatchGroup(cid) {
+    const c = document.getElementById(cid);
+    if (!c) return;
+    c.querySelectorAll('.cr-swatch').forEach(sw => {
+      sw.addEventListener('click', () => {
+        c.querySelectorAll('.cr-swatch').forEach(x => x.classList.remove('selected'));
+        sw.classList.add('selected');
+      });
+    });
+  }
+  function initEmblemGroup(cid) {
+    const c = document.getElementById(cid);
+    if (!c) return;
+    c.querySelectorAll('.cr-emblem').forEach(em => {
+      em.addEventListener('click', () => {
+        c.querySelectorAll('.cr-emblem').forEach(x => x.classList.remove('selected'));
+        em.classList.add('selected');
+      });
+    });
+  }
+  initSwatchGroup('creation-suit-swatches');
+  initSwatchGroup('creation-hair-swatches');
+  initEmblemGroup('creation-emblems');
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+<script src="engine.js"></script>
+<script src="phaser-combat.js"></script>
+<script src="combate.js"></script>
+<script src="dungeon.js"></script>
+<script src="boss.js"></script>
+<script src="map.js"></script>
+<script src="ui.js"></script>
+<script src="story.js"></script>
+<script src="cutscenes.js"></script>
+<script src="main.js"></script>
+<script src="master.js"></script>
+<script src="prestige.js"></script>
+<script src="villanshop.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
